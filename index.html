@@ -1,0 +1,2670 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jiyeon Amy Seo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --panel: #f8f6f1;
+        --text: #111111;
+        --muted: #5a5a58;
+        --line: rgba(17, 17, 17, 0.28);
+        --page-pad-top: 22px;
+        --topbar-height: clamp(100px, 13vh, 136px);
+        --portrait-max: 250px;
+        --publication-right-pad: 26px;
+        --project-copy-width: min(10vw, 136px);
+        --scroll-fade-size: 34px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: "Instrument Sans", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.7), transparent 32%),
+          linear-gradient(180deg, #f5f2ec 0%, #f1eee7 100%);
+      }
+
+      .page {
+        height: 100vh;
+        padding: var(--page-pad-top) 28px 20px;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        align-items: start;
+        min-height: var(--topbar-height);
+        position: relative;
+        z-index: 4;
+      }
+
+      .brand {
+        margin: 0;
+        font-size: clamp(3rem, 7vw, 5rem);
+        line-height: 0.9;
+        letter-spacing: -0.06em;
+        font-weight: 500;
+        grid-column: 1 / span 6;
+      }
+
+      .brand-btn {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: var(--muted);
+        cursor: pointer;
+        transition: color 0.18s ease;
+      }
+
+      .brand-btn:hover,
+      .brand-btn.active {
+        color: var(--text);
+      }
+
+      .brand-back {
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(4, max-content);
+        justify-content: space-between;
+        gap: clamp(18px, 2vw, 28px);
+        padding-top: 2px;
+        grid-column: 7 / -1;
+      }
+
+      .page.detail-mode .nav {
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .nav-btn {
+        position: relative;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        font-size: 0.98rem;
+        color: var(--muted);
+        cursor: pointer;
+        transition: color 0.18s ease;
+        z-index: 0;
+      }
+
+      .nav-btn::before {
+        content: "";
+        position: absolute;
+        inset: -8px -14px;
+        background: rgba(245, 242, 236, 0.58);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 999px;
+        z-index: -1;
+      }
+
+      .nav-btn:hover,
+      .nav-btn.active {
+        color: var(--text);
+      }
+
+      .panel {
+        display: none;
+      }
+
+      .panel.active {
+        display: block;
+      }
+
+      .hero-panel {
+        min-height: auto;
+      }
+
+      .hero-stage {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        align-items: start;
+        min-height: auto;
+        padding-top: max(108px, calc(50vh - var(--page-pad-top) - var(--topbar-height)));
+        padding-bottom: 18px;
+      }
+
+      .portrait {
+        width: min(23vw, var(--portrait-max));
+        min-width: 164px;
+        aspect-ratio: 1 / 1.18;
+        object-fit: cover;
+        filter: grayscale(82%) sepia(10%) saturate(72%) contrast(1.02) brightness(1.01);
+        grid-column: 7 / span 2;
+        justify-self: start;
+        align-self: start;
+      }
+
+      .about-row {
+        border-top: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        padding-top: 16px;
+        align-items: start;
+      }
+
+      .section-kicker {
+        font-size: 0.95rem;
+        color: var(--text);
+        grid-column: 1 / span 3;
+      }
+
+      .about-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .about-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        width: fit-content;
+        color: var(--text);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+
+      .about-link-label {
+        display: inline-block;
+      }
+
+      .about-link:hover {
+        border-bottom-color: currentColor;
+      }
+
+      .about-link-arrow {
+        width: 0.92em;
+        height: 0.92em;
+        flex: 0 0 auto;
+        stroke: currentColor;
+        stroke-width: 1.35;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transform: translateY(-0.02em);
+      }
+
+      .body-copy {
+        margin: 0;
+        max-width: 32ch;
+        font-size: clamp(1rem, 1.5vw, 1.1rem);
+        line-height: 1.28;
+        color: #232321;
+      }
+
+      .body-copy:first-of-type {
+        grid-column: 7 / span 3;
+      }
+
+      .body-copy:last-of-type {
+        grid-column: 10 / span 3;
+      }
+
+      .hero-copy {
+        font-size: clamp(0.95rem, 1.3vw, 1.02rem);
+        line-height: 1.22;
+      }
+
+      .project-panel {
+        margin-top: calc(-1 * var(--topbar-height));
+        height: calc(100vh - var(--page-pad-top) - 20px);
+        overflow-y: auto;
+        padding-right: 6px;
+        scrollbar-gutter: stable;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          #000 var(--scroll-fade-size),
+          #000 calc(100% - var(--scroll-fade-size)),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          #000 var(--scroll-fade-size),
+          #000 calc(100% - var(--scroll-fade-size)),
+          transparent 100%
+        );
+      }
+
+      .publication-panel {
+        margin-top: calc(-1 * var(--topbar-height));
+        padding-top: calc(var(--topbar-height) + 34px);
+        height: calc(100vh - var(--page-pad-top) - 20px);
+        overflow-y: auto;
+        padding-right: 6px;
+        scrollbar-gutter: stable;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          #000 var(--scroll-fade-size),
+          #000 calc(100% - var(--scroll-fade-size)),
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          #000 var(--scroll-fade-size),
+          #000 calc(100% - var(--scroll-fade-size)),
+          transparent 100%
+        );
+      }
+
+      .publication-group {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        align-items: start;
+        padding-bottom: 18px;
+        padding-right: var(--publication-right-pad);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .publication-year {
+        grid-column: 4 / span 3;
+        margin: 0;
+        padding-right: 30px;
+        padding-top: 18px;
+        display: flex;
+        justify-content: flex-end;
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
+        line-height: 0.88;
+        letter-spacing: -0.06em;
+        font-weight: 500;
+        text-align: right;
+        align-self: start;
+      }
+
+      .publication-year-text {
+        position: relative;
+        display: inline-block;
+      }
+
+      .publication-year-text::before {
+        content: "";
+        position: absolute;
+        top: -18px;
+        left: 0;
+        width: 200vw;
+        border-top: 1px solid rgba(17, 17, 17, 0.16);
+      }
+
+      .publication-list {
+        grid-column: 7 / -1;
+        padding-top: 18px;
+        padding-left: 18px;
+      }
+
+      .publication-item {
+        padding: 12px 0;
+      }
+
+      .publication-item:first-child {
+        padding-top: 0;
+      }
+
+      .publication-item + .publication-item {
+        border-top: 1px solid rgba(17, 17, 17, 0.12);
+      }
+
+      .publication-item:last-child {
+        border-bottom: 0;
+      }
+
+      .publication-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.25;
+      }
+
+      .publication-authors {
+        margin: 6px 0 0;
+        font-size: 0.93rem;
+        line-height: 1.32;
+        color: #2f2f2b;
+      }
+
+      .author-self {
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 0.12em;
+      }
+
+      .publication-venue {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+
+      .edit-trigger {
+        position: fixed;
+        left: 22px;
+        bottom: 18px;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        color: rgba(90, 90, 88, 0.75);
+        cursor: pointer;
+        display: none;
+      }
+
+      .edit-trigger:hover {
+        color: var(--text);
+      }
+
+      .edit-trigger.visible {
+        display: inline-block;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(17, 17, 17, 0.16);
+        backdrop-filter: blur(6px);
+        z-index: 30;
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .modal-card {
+        width: min(720px, 100%);
+        max-height: min(86vh, 920px);
+        overflow: hidden;
+        padding: 22px 22px 0;
+        background: rgba(249, 247, 241, 0.96);
+        border: 1px solid rgba(17, 17, 17, 0.14);
+        border-radius: 18px;
+        box-shadow: 0 24px 60px rgba(17, 17, 17, 0.14);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-card h2 {
+        margin: 0 0 14px;
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      .modal-copy {
+        margin: 0 0 14px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        color: var(--muted);
+      }
+
+      .field-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      .text-input,
+      .text-area {
+        width: 100%;
+        border: 1px solid rgba(17, 17, 17, 0.14);
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--text);
+        font: inherit;
+        font-size: 0.95rem;
+        padding: 10px 12px;
+        border-radius: 10px;
+      }
+
+      .text-area {
+        min-height: 74px;
+        resize: vertical;
+      }
+
+      .modal-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .modal-scroll {
+        min-height: 0;
+        overflow: auto;
+        padding-bottom: 18px;
+      }
+
+      .modal-footer {
+        position: sticky;
+        bottom: 0;
+        margin: 0 -22px;
+        padding: 14px 22px 18px;
+        background: rgba(249, 247, 241, 0.96);
+        border-top: 1px solid rgba(17, 17, 17, 0.08);
+      }
+
+      .action-btn {
+        border: 1px solid rgba(17, 17, 17, 0.16);
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .action-btn.primary {
+        background: var(--text);
+        color: #f7f5ef;
+      }
+
+      .action-btn.ghost {
+        color: var(--muted);
+      }
+
+      .editor-status {
+        margin-top: 12px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      .editor-year {
+        margin-top: 20px;
+        padding: 18px 18px 16px;
+        border: 1px solid rgba(17, 17, 17, 0.12);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.52);
+      }
+
+      .editor-year-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+      }
+
+      .editor-year-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .editor-year-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 64px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: rgba(17, 17, 17, 0.06);
+        font-size: 0.82rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .editor-entry {
+        padding: 12px 0;
+        border-top: 1px solid rgba(17, 17, 17, 0.08);
+        cursor: grab;
+      }
+
+      .editor-entry:first-of-type {
+        border-top: 0;
+        padding-top: 2px;
+      }
+
+      .editor-entry.dragging {
+        opacity: 0.45;
+      }
+
+      .editor-entry.drop-target {
+        border-top-color: rgba(123, 111, 84, 0.6);
+      }
+
+      .editor-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .editor-grid .full {
+        grid-column: 1 / -1;
+      }
+
+      .editor-danger {
+        color: #8f2b2b;
+      }
+
+      .editor-year-input {
+        max-width: 140px;
+      }
+
+      .scroll-soft::-webkit-scrollbar,
+      .modal-card::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .scroll-soft::-webkit-scrollbar-track,
+      .modal-card::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .scroll-soft::-webkit-scrollbar-thumb,
+      .modal-card::-webkit-scrollbar-thumb {
+        background: rgba(194, 183, 160, 0.72);
+        border-radius: 999px;
+      }
+
+      .scroll-soft::-webkit-scrollbar-thumb:hover,
+      .modal-card::-webkit-scrollbar-thumb:hover {
+        background: rgba(175, 163, 140, 0.82);
+      }
+
+      .scroll-soft,
+      .modal-card {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(194, 183, 160, 0.72) transparent;
+      }
+
+      .project-list {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+      }
+
+      .project-item:first-child {
+        margin-top: calc(var(--topbar-height) + 42px);
+      }
+
+      .contact-title {
+        margin: 0;
+        font-size: clamp(1.2rem, 2vw, 1.55rem);
+        line-height: 1.3;
+        letter-spacing: 0;
+        font-weight: 400;
+      }
+
+      .project-item {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        align-items: end;
+      }
+
+      .project-copy {
+        grid-column: 1 / span 6;
+        width: var(--project-copy-width);
+        text-align: right;
+        align-self: end;
+        justify-self: end;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(17, 17, 17, 0.16);
+      }
+
+      .project-media {
+        grid-column: 7 / span 4;
+        align-self: end;
+        width: 100%;
+        justify-self: start;
+      }
+
+      .project-link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .project-image {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1.45 / 1;
+        object-fit: cover;
+        filter: grayscale(82%) sepia(10%) saturate(72%) contrast(1.02) brightness(1.01);
+        transition: filter 0.2s ease;
+      }
+
+      .project-link:hover .project-image {
+        filter: none;
+      }
+
+      .project-title {
+        margin: 0;
+        font-size: 1.02rem;
+        font-weight: 500;
+        line-height: 1.2;
+      }
+
+      .project-venue {
+        margin: 6px 0 0;
+        font-size: 0.93rem;
+        color: var(--muted);
+      }
+
+      .project-summary {
+        margin: 6px 0 0;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        color: var(--muted);
+        overflow-wrap: anywhere;
+      }
+
+      .project-editor-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .project-thumb {
+        position: relative;
+        width: 108px;
+      }
+
+      .project-thumb img {
+        width: 100%;
+        aspect-ratio: 1 / 0.8;
+        object-fit: cover;
+        display: block;
+        border-radius: 10px;
+      }
+
+      .project-thumb button {
+        width: 100%;
+        margin-top: 6px;
+      }
+
+      .project-detail-panel {
+        margin-top: calc(-1 * var(--topbar-height));
+        padding-top: calc(var(--topbar-height) - 20px);
+        height: calc(100vh - var(--page-pad-top) - 20px);
+        overflow: hidden;
+        position: relative;
+      }
+
+      #project-detail-render {
+        height: 100%;
+        min-height: 0;
+        position: relative;
+      }
+
+      .project-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: 18px;
+        row-gap: 1px;
+        height: 100%;
+        min-height: 0;
+        grid-template-rows: auto minmax(0, 1fr);
+        padding-bottom: 112px;
+      }
+
+      .project-detail-copy {
+        grid-column: 1 / span 6;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        align-self: start;
+      }
+
+      .project-detail-title {
+        margin: 0;
+        font-size: clamp(3rem, 7vw, 5rem);
+        line-height: 0.9;
+        letter-spacing: -0.06em;
+        font-weight: 500;
+      }
+
+      .project-detail-description {
+        margin: 0;
+        max-width: 30ch;
+        font-size: 1rem;
+        line-height: 1.4;
+        color: var(--muted);
+      }
+
+      .project-detail-main {
+        grid-column: 7 / -1;
+        grid-row: 1;
+        align-self: start;
+      }
+
+      .project-detail-main img {
+        display: block;
+        width: 100%;
+        max-height: 62vh;
+        object-fit: contain;
+        object-position: left top;
+      }
+
+      .project-detail-strip {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 18px;
+        display: flex;
+        gap: 18px;
+        align-items: end;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 0;
+        scrollbar-gutter: stable;
+      }
+
+      .project-detail-thumb {
+        flex: 0 0 calc((100% - 5 * 18px) / 6);
+        border: 0;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .project-detail-thumb img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .contact-panel {
+        margin-top: calc(-1 * var(--topbar-height));
+        padding-top: calc(var(--topbar-height) + 34px);
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        grid-template-rows: auto auto;
+        gap: 18px;
+        align-content: start;
+      }
+
+      .contact-panel.active {
+        display: grid;
+      }
+
+      .about-panel {
+        margin-top: calc(-1 * var(--topbar-height));
+        padding-top: calc(var(--topbar-height) + 8px);
+        height: calc(100vh - var(--page-pad-top) - 20px);
+        overflow: hidden;
+      }
+
+      #about-render {
+        height: 100%;
+        min-height: 0;
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+        height: 100%;
+        min-height: 0;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      .about-top-left {
+        grid-column: 1 / span 6;
+        grid-row: 1;
+        min-height: 0;
+      }
+
+      .about-top-right {
+        grid-column: 7 / -1;
+        grid-row: 1;
+        min-height: 0;
+      }
+
+      .about-bottom-left {
+        grid-column: 1 / span 6;
+        grid-row: 2;
+        min-height: 0;
+      }
+
+      .about-bottom-right {
+        grid-column: 7 / -1;
+        grid-row: 2;
+        min-height: 0;
+      }
+
+      .info-section {
+        min-height: 0;
+      }
+
+      .about-bottom-left,
+      .about-bottom-right {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+        padding-top: 18px;
+      }
+
+      .info-section-head {
+        margin: 0;
+        border-top: 1px solid var(--line);
+        padding-top: 7px;
+        font-size: 0.96rem;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 33px;
+      }
+
+      .section-add {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        font-size: 1.15rem;
+        line-height: 1;
+        color: rgba(17, 17, 17, 0.72);
+        cursor: pointer;
+      }
+
+      .section-add:hover {
+        color: var(--text);
+      }
+
+      .info-list {
+        min-height: 0;
+        padding-top: 7px;
+      }
+
+      .info-list.scroll-soft {
+        height: 100%;
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 6px;
+        scrollbar-gutter: stable;
+      }
+
+      .info-entry {
+        padding: 12px 0;
+        border-top: 1px solid rgba(17, 17, 17, 0.12);
+      }
+
+      .info-entry:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .info-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.25;
+      }
+
+      .info-meta {
+        margin: 6px 0 0;
+        font-size: 0.92rem;
+        line-height: 1.35;
+        color: var(--muted);
+      }
+
+      .education-degree {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.28;
+      }
+
+      .education-detail {
+        margin: 6px 0 0;
+        font-size: 0.92rem;
+        line-height: 1.35;
+        color: var(--muted);
+      }
+
+      .research-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .research-chip {
+        width: fit-content;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(245, 242, 236, 0.62);
+        font-size: 0.92rem;
+        color: var(--text);
+        font-weight: 400;
+      }
+
+      .contact-copy {
+        margin: 0;
+        font-size: clamp(1.2rem, 2vw, 1.55rem);
+        line-height: 1.3;
+        max-width: none;
+      }
+
+      .contact-intro {
+        grid-column: 6 / span 3;
+        grid-row: 1;
+        width: 100%;
+        justify-self: start;
+        margin-top: 22vh;
+      }
+
+      .contact-copy {
+        grid-column: 7 / span 3;
+        grid-row: 2;
+        margin-top: 1vh;
+        width: 100%;
+        justify-self: start;
+      }
+
+      .contact-link {
+        color: var(--text);
+        text-decoration: none;
+        border-bottom: 1px solid var(--text);
+      }
+
+      @media (max-height: 880px) {
+        :root {
+          --portrait-max: 205px;
+        }
+
+        .page {
+          height: 100vh;
+        }
+
+        .body-copy {
+          font-size: 0.96rem;
+          line-height: 1.18;
+        }
+      }
+
+      @media (max-height: 760px) {
+        html,
+        body {
+          overflow-y: auto;
+        }
+
+        .page {
+          height: auto;
+          min-height: 100vh;
+        }
+      }
+
+      @media (max-width: 960px) {
+        html,
+        body {
+          overflow: auto;
+        }
+
+        .topbar {
+          grid-template-columns: 1fr;
+          min-height: auto;
+        }
+
+        .nav {
+          flex-wrap: wrap;
+          grid-column: 1;
+          justify-content: flex-start;
+        }
+
+        .brand {
+          grid-column: 1;
+        }
+
+        .hero-stage {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          align-items: end;
+          min-height: 380px;
+          padding: 64px 0 20px;
+        }
+
+        .portrait {
+          grid-column: 1;
+          justify-self: center;
+          width: min(60vw, var(--portrait-max));
+        }
+
+        .about-row {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+
+        .section-kicker,
+        .body-copy:first-of-type,
+        .body-copy:last-of-type {
+          grid-column: 1;
+          max-width: none;
+        }
+
+        .project-item {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .publication-group {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .about-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+        }
+
+        .project-detail-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+        }
+
+        .project-detail-title,
+        .project-detail-description,
+        .project-detail-main,
+        .project-detail-strip {
+          grid-column: 1;
+          grid-row: auto;
+        }
+
+        .about-top-left,
+        .about-top-right,
+        .about-bottom-left,
+        .about-bottom-right,
+        .contact-intro,
+        .contact-copy {
+          grid-column: 1;
+          grid-row: auto;
+        }
+
+        .about-panel {
+          height: auto;
+          overflow: visible;
+        }
+
+        .info-list.scroll-soft {
+          height: auto;
+          overflow: visible;
+          padding-right: 0;
+        }
+
+        .publication-year,
+        .publication-list {
+          grid-column: 1;
+        }
+
+        .publication-year {
+          font-size: 1.5rem;
+        }
+
+        .publication-list {
+          padding-left: 0;
+        }
+
+        .project-copy,
+        .project-media {
+          grid-column: 1;
+        }
+
+        .project-copy {
+          text-align: left;
+        }
+
+        .edit-trigger {
+          left: 12px;
+          bottom: 10px;
+        }
+
+        .editor-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        :root {
+          --page-pad-top: 10px;
+        }
+
+        .page {
+          padding: 10px;
+        }
+
+        .publication-panel,
+        .project-panel,
+        .about-panel,
+        .project-detail-panel {
+          height: auto;
+          overflow: visible;
+          margin-top: 0;
+          padding-top: 34px;
+          padding-right: 0;
+        }
+
+        .contact-panel {
+          margin-top: 0;
+          padding-top: 34px;
+        }
+
+        .hero-panel {
+          min-height: calc(100vh - 108px);
+        }
+
+        .hero-stage {
+          min-height: 320px;
+          padding-top: 40px;
+          padding-bottom: 16px;
+        }
+
+        .portrait {
+          width: min(60vw, 260px);
+        }
+
+        .nav {
+          gap: 14px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <h1 class="brand">
+          <button class="brand-btn active" data-tab="home" type="button">Jiyeon Amy Seo</button>
+        </h1>
+        <nav class="nav" aria-label="Sections">
+          <button class="nav-btn" data-tab="about">About</button>
+          <button class="nav-btn" data-tab="publications">Publications</button>
+          <button class="nav-btn" data-tab="projects">Project</button>
+          <button class="nav-btn" data-tab="contact">Contact</button>
+        </nav>
+      </header>
+
+      <section id="home" class="panel hero-panel active">
+        <div class="hero-stage">
+          <img
+            class="portrait"
+            src="./profile.jpg"
+            alt="Portrait of Jiyeon Amy Seo"
+            onerror="this.src='./hero.jpg';"
+          />
+        </div>
+        <div class="about-row">
+          <div class="section-kicker about-links">
+            <a
+              class="about-link"
+              href="https://www.linkedin.com/in/jiyeon-amy-seo-3121a61a1/"
+              aria-label="LinkedIn"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span class="about-link-label">LinkedIn</span>
+              <svg class="about-link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 13L13 3"></path>
+                <path d="M8.5 3H13V7.5"></path>
+              </svg>
+            </a>
+            <a
+              class="about-link"
+              href="https://scholar.google.com/citations?user=8xjot9iEcMMC&hl=en"
+              aria-label="Google Scholar"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span class="about-link-label">Google Scholar</span>
+              <svg class="about-link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 13L13 3"></path>
+                <path d="M8.5 3H13V7.5"></path>
+              </svg>
+            </a>
+            <a
+              class="about-link"
+              href="https://docs.google.com/document/d/14fef4X2htYOQZ3QkThWRPVXnoRFmkrCK/edit?usp=sharing&ouid=101438472093610734933&rtpof=true&sd=true"
+              aria-label="CV"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span class="about-link-label">CV</span>
+              <svg class="about-link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 13L13 3"></path>
+                <path d="M8.5 3H13V7.5"></path>
+              </svg>
+            </a>
+          </div>
+          <p class="body-copy hero-copy">
+            I study how AI and other emerging technologies shape human social experience,
+            particularly as they come to be perceived and engaged as social actors. I examine and
+            speculate on these evolving human-technology relations through the design of new
+            artifacts and systems, alongside human-centered research methods.
+          </p>
+          <p class="body-copy hero-copy">
+            I take an interdisciplinary approach to human-centered AI, drawing on perspectives from
+            design, engineering, psychology, STS, and the social sciences. Currently, I am an
+            Assistant Professor of AI and Design at the University of Florida. I hold a Ph.D., M.S.,
+            and B.S. in Industrial Design from KAIST.
+          </p>
+        </div>
+      </section>
+
+      <section id="about" class="panel about-panel">
+        <div id="about-render"></div>
+      </section>
+
+      <section id="publications" class="panel publication-panel scroll-soft">
+        <div id="publications-render"></div>
+      </section>
+
+      <section id="projects" class="panel project-panel scroll-soft">
+        <div id="projects-render"></div>
+      </section>
+
+      <section id="project-detail" class="panel project-detail-panel">
+        <div id="project-detail-render"></div>
+      </section>
+
+      <section id="contact" class="panel contact-panel">
+        <h2 class="contact-title contact-intro">I’d be happy to connect!</h2>
+        <p class="contact-copy">
+          For collaborations, research conversations, or invited talks, please feel free to reach out at
+          <br />
+          <a class="contact-link" href="mailto:hyungjuncho@ufl.edu">hyungjuncho@ufl.edu</a>
+        </p>
+      </section>
+
+      <button class="edit-trigger" type="button" id="edit-trigger">edit.</button>
+    </main>
+
+    <div class="modal" id="password-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-scroll">
+          <h2>Editor Access</h2>
+          <p class="modal-copy">Enter the admin password to edit this section.</p>
+          <label class="field-label" for="password-input">Password</label>
+          <input class="text-input" id="password-input" type="password" autocomplete="current-password" />
+          <p class="editor-status" id="password-status"></p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-actions">
+            <button class="action-btn primary" type="button" id="password-submit">Continue</button>
+            <button class="action-btn ghost" type="button" id="password-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="editor-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-scroll">
+          <h2>Edit Publications</h2>
+          <p class="modal-copy">Changes are saved to the backend and remain after refresh or redeploy.</p>
+          <div id="editor-root"></div>
+          <p class="editor-status" id="editor-status"></p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-actions">
+            <button class="action-btn" type="button" id="add-year">Add Year</button>
+            <button class="action-btn primary" type="button" id="save-publications">Save Changes</button>
+            <button class="action-btn ghost" type="button" id="close-editor">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="about-editor-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-scroll">
+          <h2 id="about-editor-title">Edit About</h2>
+          <p class="modal-copy" id="about-editor-copy">Update section content.</p>
+          <div id="about-editor-root"></div>
+          <p class="editor-status" id="about-editor-status"></p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-actions">
+            <button class="action-btn primary" type="button" id="save-about">Save Changes</button>
+            <button class="action-btn ghost" type="button" id="close-about-editor">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="projects-editor-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-scroll">
+          <h2>Edit Projects</h2>
+          <p class="modal-copy">Update project order, text, and images. Images are stored with the project data for now.</p>
+          <div id="projects-editor-root"></div>
+          <p class="editor-status" id="projects-editor-status"></p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-actions">
+            <button class="action-btn" type="button" id="add-project">Add Project</button>
+            <button class="action-btn primary" type="button" id="save-projects">Save Changes</button>
+            <button class="action-btn ghost" type="button" id="close-projects-editor">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const buttons = document.querySelectorAll(".nav-btn, .brand-btn");
+      const panels = document.querySelectorAll(".panel");
+      const API_BASE = "/api";
+      let publications = [];
+      let aboutContent = null;
+      let projects = [];
+      let publicationLibrary = [];
+      let projectLibrary = [];
+      let activeTab = "home";
+      let previousTabBeforeDetail = null;
+      let projectDetailState = null;
+      let suppressHashRoute = false;
+      let draggedItem = null;
+      let aboutEditorSection = null;
+      let aboutDraggedItem = null;
+      let projectDraggedIndex = null;
+
+      const publicationsRender = document.querySelector("#publications-render");
+      const aboutRender = document.querySelector("#about-render");
+      const projectsRender = document.querySelector("#projects-render");
+      const projectDetailRender = document.querySelector("#project-detail-render");
+      const editTrigger = document.querySelector("#edit-trigger");
+      const passwordModal = document.querySelector("#password-modal");
+      const editorModal = document.querySelector("#editor-modal");
+      const aboutEditorModal = document.querySelector("#about-editor-modal");
+      const projectsEditorModal = document.querySelector("#projects-editor-modal");
+      const aboutEditorTitle = document.querySelector("#about-editor-title");
+      const aboutEditorCopy = document.querySelector("#about-editor-copy");
+      const passwordInput = document.querySelector("#password-input");
+      const passwordSubmit = document.querySelector("#password-submit");
+      const passwordCancel = document.querySelector("#password-cancel");
+      const passwordStatus = document.querySelector("#password-status");
+      const editorRoot = document.querySelector("#editor-root");
+      const editorStatus = document.querySelector("#editor-status");
+      const aboutEditorRoot = document.querySelector("#about-editor-root");
+      const aboutEditorStatus = document.querySelector("#about-editor-status");
+      const projectsEditorRoot = document.querySelector("#projects-editor-root");
+      const projectsEditorStatus = document.querySelector("#projects-editor-status");
+      const addYearButton = document.querySelector("#add-year");
+      const savePublicationsButton = document.querySelector("#save-publications");
+      const closeEditorButton = document.querySelector("#close-editor");
+      const saveAboutButton = document.querySelector("#save-about");
+      const closeAboutEditorButton = document.querySelector("#close-about-editor");
+      const addProjectButton = document.querySelector("#add-project");
+      const saveProjectsButton = document.querySelector("#save-projects");
+      const closeProjectsEditorButton = document.querySelector("#close-projects-editor");
+      const pageRoot = document.querySelector(".page");
+      const brandButton = document.querySelector(".brand-btn");
+
+      updateEditTrigger(activeTab);
+      syncChromeForActiveTab();
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button === brandButton && activeTab === "project-detail") {
+            exitProjectDetail(false, true);
+            return;
+          }
+
+          activateTab(button.dataset.tab, { resetScroll: true, updateHash: true });
+        });
+      });
+
+      function updateEditTrigger(tab) {
+        editTrigger.classList.toggle("visible", tab === "publications" || tab === "projects");
+      }
+
+      function updateHash(hashValue) {
+        const nextHash = hashValue.startsWith("#") ? hashValue : `#${hashValue}`;
+        if (window.location.hash === nextHash) {
+          return;
+        }
+
+        suppressHashRoute = true;
+        window.history.pushState(null, "", nextHash);
+        requestAnimationFrame(() => {
+          suppressHashRoute = false;
+        });
+      }
+
+      function syncChromeForActiveTab() {
+        const inDetail = activeTab === "project-detail";
+        pageRoot.classList.toggle("detail-mode", inDetail);
+        brandButton.textContent = inDetail ? "←" : "Jiyeon Amy Seo";
+        brandButton.classList.toggle("brand-back", inDetail);
+        brandButton.dataset.tab = inDetail ? "project-detail-back" : "home";
+        buttons.forEach((item) => {
+          if (item !== brandButton) {
+            item.classList.toggle("active", !inDetail && item.dataset.tab === activeTab);
+          }
+        });
+        brandButton.classList.toggle("active", inDetail ? false : activeTab === "home");
+      }
+
+      function resetPanelScroll(tab) {
+        const panel = document.getElementById(tab);
+        if (!panel) {
+          return;
+        }
+
+        if ("scrollTop" in panel) {
+          panel.scrollTop = 0;
+        }
+
+        panel.querySelectorAll(".scroll-soft").forEach((node) => {
+          node.scrollTop = 0;
+        });
+      }
+
+      function capturePanelScroll(tab) {
+        const panel = document.getElementById(tab);
+        if (!panel) {
+          return null;
+        }
+
+        return {
+          panelScrollTop: panel.scrollTop,
+          nested: Array.from(panel.querySelectorAll(".scroll-soft")).map((node, index) => ({
+            index,
+            scrollTop: node.scrollTop,
+          })),
+        };
+      }
+
+      function restorePanelScroll(tab, snapshot) {
+        const panel = document.getElementById(tab);
+        if (!panel || !snapshot) {
+          return;
+        }
+
+        panel.scrollTop = snapshot.panelScrollTop || 0;
+        const nestedNodes = panel.querySelectorAll(".scroll-soft");
+        snapshot.nested.forEach((entry) => {
+          if (nestedNodes[entry.index]) {
+            nestedNodes[entry.index].scrollTop = entry.scrollTop;
+          }
+        });
+      }
+
+      function activateTab(tab, { resetScroll = true, updateHash: shouldUpdateHash = false } = {}) {
+        if (activeTab === "project-detail" && tab !== "project-detail") {
+          projectDetailState = null;
+          previousTabBeforeDetail = null;
+        }
+
+        activeTab = tab;
+        buttons.forEach((item) => item.classList.toggle("active", item.dataset.tab === tab && item !== brandButton));
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === activeTab));
+        updateEditTrigger(activeTab);
+        if (resetScroll) {
+          resetPanelScroll(activeTab);
+        }
+        syncChromeForActiveTab();
+
+        if (shouldUpdateHash) {
+          updateHash(tab);
+        }
+      }
+
+      function enterProjectDetail(projectId, { updateHash: shouldUpdateHash = false } = {}) {
+        previousTabBeforeDetail = activeTab;
+        projectDetailState = {
+          projectId,
+          fromTab: activeTab,
+          scrollSnapshot: capturePanelScroll(activeTab),
+          selectedImage: null,
+        };
+        activeTab = "project-detail";
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === activeTab));
+        updateEditTrigger(activeTab);
+        renderProjectDetail();
+        syncChromeForActiveTab();
+        if (shouldUpdateHash) {
+          updateHash(`project/${projectId}`);
+        }
+      }
+
+      function exitProjectDetail(resetToTop = false, updateHashOnExit = false) {
+        if (!projectDetailState) {
+          return;
+        }
+
+        const targetTab = previousTabBeforeDetail || "projects";
+        activeTab = targetTab;
+        panels.forEach((panel) => panel.classList.toggle("active", panel.id === activeTab));
+        updateEditTrigger(activeTab);
+        syncChromeForActiveTab();
+
+        if (resetToTop) {
+          resetPanelScroll(activeTab);
+        } else {
+          restorePanelScroll(activeTab, projectDetailState.scrollSnapshot);
+        }
+
+        projectDetailState = null;
+        previousTabBeforeDetail = null;
+
+        if (updateHashOnExit) {
+          updateHash(targetTab);
+        }
+      }
+
+      function routeFromHash() {
+        const hash = window.location.hash.replace(/^#/, "");
+        if (!hash || hash === "home") {
+          activateTab("home", { resetScroll: false, updateHash: false });
+          return;
+        }
+
+        if (hash.startsWith("project/")) {
+          const projectId = decodeURIComponent(hash.slice("project/".length));
+          previousTabBeforeDetail = "projects";
+          projectDetailState = {
+            projectId,
+            fromTab: "projects",
+            scrollSnapshot: null,
+            selectedImage: null,
+          };
+          activeTab = "project-detail";
+          panels.forEach((panel) => panel.classList.toggle("active", panel.id === activeTab));
+          updateEditTrigger(activeTab);
+          renderProjectDetail();
+          syncChromeForActiveTab();
+          return;
+        }
+
+        const knownTabs = new Set(["about", "publications", "projects", "contact"]);
+        if (knownTabs.has(hash)) {
+          activateTab(hash, { resetScroll: false, updateHash: false });
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function formatAuthors(value) {
+        const escaped = escapeHtml(value);
+        return escaped
+          .replaceAll("Jiyeon Amy Seo", '<span class="author-self">Jiyeon Amy Seo</span>')
+          .replaceAll("Jiyeon Seo", '<span class="author-self">Jiyeon Seo</span>');
+      }
+
+      function sortPublicationYears() {
+        publications.sort((left, right) => Number(right.year) - Number(left.year));
+      }
+
+      async function requestJson(url, options = {}) {
+        const response = await fetch(url, {
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {}),
+          },
+          ...options,
+        });
+
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(payload.error || "Request failed.");
+        }
+
+        return payload;
+      }
+
+      async function uploadProjectAsset(file) {
+        const payload = await requestJson(`${API_BASE}/projects/upload-url`, {
+          method: "POST",
+          body: JSON.stringify({
+            filename: file.name,
+            contentType: file.type || "application/octet-stream",
+          }),
+        });
+
+        const response = await fetch(payload.uploadUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": file.type || "application/octet-stream",
+          },
+          body: file,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to upload image.");
+        }
+
+        return payload.publicUrl;
+      }
+
+      async function deleteProjectAsset(imageUrl) {
+        await requestJson(`${API_BASE}/projects/delete-image`, {
+          method: "POST",
+          body: JSON.stringify({ imageUrl }),
+        });
+      }
+
+      function renderPublications() {
+        sortPublicationYears();
+        publicationsRender.innerHTML = publications
+          .map((group) => {
+            const items = group.items
+              .map((item) => {
+                const awardText = item.award ? ` ${escapeHtml(item.award)}` : "";
+                return `
+                  <div class="publication-item">
+                    <h3 class="publication-title">${escapeHtml(item.title)}</h3>
+                    <p class="publication-authors">${formatAuthors(item.authors)}</p>
+                    <span class="publication-venue">${escapeHtml(item.venue)}${awardText}</span>
+                  </div>
+                `;
+              })
+              .join("");
+
+            return `
+              <article class="publication-group">
+                <p class="publication-year"><span class="publication-year-text">${escapeHtml(group.year)}</span></p>
+                <div class="publication-list">${items}</div>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function renderAbout() {
+        if (!aboutContent) {
+          return;
+        }
+
+        const educationHtml = aboutContent.education
+          .map((entry) => {
+            const details = entry.details
+              .map((detail) => `<p class="education-detail">${escapeHtml(detail)}</p>`)
+              .join("");
+
+            return `
+              <article class="info-entry">
+                <p class="education-degree">${escapeHtml(entry.degree)}</p>
+                ${details}
+              </article>
+            `;
+          })
+          .join("");
+
+        const interestsHtml = aboutContent.researchInterests
+          .map((item) => `<div class="research-chip">${escapeHtml(item)}</div>`)
+          .join("");
+
+        const listHtml = (items) =>
+          items
+            .map(
+              (entry) => `
+                <article class="info-entry">
+                  <p class="info-title">${escapeHtml(entry.title)}</p>
+                  <p class="info-meta">${escapeHtml(entry.meta)}</p>
+                </article>
+              `
+            )
+            .join("");
+
+        aboutRender.innerHTML = `
+          <div class="about-grid">
+            <section class="info-section about-top-left">
+              <h2 class="info-section-head">Education</h2>
+              <div class="info-list">${educationHtml}</div>
+            </section>
+            <section class="info-section about-top-right">
+              <h2 class="info-section-head">Research Interests</h2>
+              <div class="info-list">
+                <div class="research-list">${interestsHtml}</div>
+              </div>
+            </section>
+            <section class="info-section about-bottom-left">
+              <h2 class="info-section-head">
+                <span>News</span>
+                <button class="section-add" type="button" data-about-open="news" aria-label="Edit News">+</button>
+              </h2>
+              <div class="info-list scroll-soft">${listHtml(aboutContent.news)}</div>
+            </section>
+            <section class="info-section about-bottom-right">
+              <h2 class="info-section-head">
+                <span>Travel</span>
+                <button class="section-add" type="button" data-about-open="travel" aria-label="Edit Travel">+</button>
+              </h2>
+              <div class="info-list scroll-soft">${listHtml(aboutContent.travel)}</div>
+            </section>
+          </div>
+        `;
+      }
+
+      function renderProjects() {
+        projectsRender.innerHTML = `
+          <div class="project-list">
+            ${projects
+              .map(
+                (project) => `
+                  <article class="project-item">
+                    <div class="project-copy">
+                      <h3 class="project-title">${escapeHtml(project.title)}</h3>
+                      <p class="project-venue">${escapeHtml(project.venue)}</p>
+                      <p class="project-summary">${escapeHtml(project.summary)}</p>
+                    </div>
+                    <div class="project-media">
+                      <a class="project-link" href="#" data-project-id="${escapeHtml(project.id)}" aria-label="${escapeHtml(project.title)}">
+                        <img class="project-image" src="${escapeHtml(project.heroImage || "./hero.jpg")}" alt="${escapeHtml(project.title)}" />
+                      </a>
+                    </div>
+                  </article>
+                `
+              )
+              .join("")}
+          </div>
+        `;
+      }
+
+      function renderProjectDetail() {
+        if (!projectDetailState) {
+          return;
+        }
+
+        const project = projects.find((item) => item.id === projectDetailState.projectId);
+        if (!project) {
+          projectDetailRender.innerHTML = "";
+          return;
+        }
+
+        const gallery = [project.heroImage, ...project.galleryImages].filter(Boolean);
+        if (!projectDetailState.selectedImage) {
+          projectDetailState.selectedImage = project.heroImage || gallery[0] || "";
+        }
+
+        projectDetailRender.innerHTML = `
+          <div class="project-detail-grid">
+            <div class="project-detail-copy">
+              <h2 class="project-detail-title">${escapeHtml(project.title)}</h2>
+              <p class="project-detail-description">${escapeHtml(project.description || project.summary)}</p>
+            </div>
+            <div class="project-detail-main">
+              <img src="${escapeHtml(projectDetailState.selectedImage)}" alt="${escapeHtml(project.title)}" />
+            </div>
+            <div class="project-detail-strip scroll-soft">
+              ${gallery
+                .map(
+                  (image, index) => `
+                    <button class="project-detail-thumb" type="button" data-detail-image="${escapeHtml(image)}" aria-label="View image ${index + 1}">
+                      <img src="${escapeHtml(image)}" alt="${escapeHtml(project.title)} detail ${index + 1}" />
+                    </button>
+                  `
+                )
+                .join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderEditor() {
+        sortPublicationYears();
+        const selectedIds = new Set(
+          publications.flatMap((group) => group.items.map((item) => item.id).filter(Boolean))
+        );
+        const availableLibrary = publicationLibrary.filter((item) => !selectedIds.has(item.id));
+        editorRoot.innerHTML = publications
+          .map((group, groupIndex) => {
+            const items = group.items
+              .map(
+                (item, itemIndex) => `
+                  <div class="editor-entry" draggable="true" data-group-index="${groupIndex}" data-item-index="${itemIndex}">
+                    <div class="editor-grid">
+                      <input class="text-input full" data-field="title" value="${escapeHtml(item.title)}" placeholder="Title" />
+                      <input class="text-input full" data-field="authors" value="${escapeHtml(item.authors)}" placeholder="Authors" />
+                      <input class="text-input" data-field="venue" value="${escapeHtml(item.venue)}" placeholder="Venue and year" />
+                      <input class="text-input" data-field="award" value="${escapeHtml(item.award || "")}" placeholder="Award (optional)" />
+                    </div>
+                    <div class="modal-actions">
+                      <button class="action-btn ghost editor-danger" type="button" data-remove-item="${groupIndex}:${itemIndex}">Delete Paper</button>
+                    </div>
+                  </div>
+                `
+              )
+              .join("");
+
+            return `
+              <section class="editor-year" data-year-index="${groupIndex}">
+                <div class="editor-year-head">
+                  <div>
+                    <h3 class="editor-year-title">Year Block ${groupIndex + 1}</h3>
+                    <div class="editor-year-badge">${escapeHtml(group.year || "Untitled")}</div>
+                  </div>
+                  <button class="action-btn ghost editor-danger" type="button" data-remove-year="${groupIndex}">Delete Year</button>
+                </div>
+                <div class="editor-grid">
+                  <input class="text-input editor-year-input" data-year-field="${groupIndex}" value="${escapeHtml(group.year)}" placeholder="Year" />
+                </div>
+                ${items}
+                <div class="modal-actions">
+                  <button class="action-btn" type="button" data-add-item="${groupIndex}">Add Paper</button>
+                </div>
+              </section>
+            `;
+          })
+          .join("");
+
+        editorRoot.innerHTML += `
+          <section class="editor-year">
+            <div class="editor-year-head">
+              <div>
+                <h3 class="editor-year-title">Add From Library</h3>
+                <div class="editor-year-badge">${availableLibrary.length} available</div>
+              </div>
+            </div>
+            ${
+              availableLibrary.length
+                ? availableLibrary
+                    .map(
+                      (item) => `
+                        <div class="editor-entry">
+                          <div>
+                            <strong>${escapeHtml(item.title)}</strong>
+                            <p class="publication-authors">${escapeHtml(item.authors)}</p>
+                            <p class="publication-meta">${escapeHtml(item.venue)}${item.award ? ` ${escapeHtml(item.award)}` : ""}</p>
+                          </div>
+                          <div class="modal-actions">
+                            <button class="action-btn" type="button" data-add-library-publication="${escapeHtml(item.id)}">Add to Site</button>
+                          </div>
+                        </div>
+                      `
+                    )
+                    .join("")
+                : '<p class="publication-authors">All library publications are already in this site.</p>'
+            }
+          </section>
+        `;
+      }
+
+      function renderAboutEditor() {
+        if (!aboutContent) {
+          return;
+        }
+
+        const sectionTitle = aboutEditorSection === "travel" ? "Travel" : "News";
+        const metaLabel = aboutEditorSection === "travel" ? "Date / Place" : "Date";
+        const items = aboutContent[aboutEditorSection] || [];
+
+        aboutEditorTitle.textContent = `Edit ${sectionTitle}`;
+        aboutEditorCopy.textContent = `Update ${sectionTitle} items, reorder them, and save changes.`;
+
+        aboutEditorRoot.innerHTML = `
+          <section class="editor-year">
+            <div class="editor-year-head">
+              <div>
+                <h3 class="editor-year-title">${sectionTitle}</h3>
+                <div class="editor-year-badge">${sectionTitle}</div>
+              </div>
+            </div>
+            ${items
+              .map(
+                (entry, index) => `
+                  <div class="editor-entry" draggable="true" data-about-list="${aboutEditorSection}" data-about-index="${index}">
+                    <div class="editor-grid">
+                      <input class="text-input full" data-about-field="${aboutEditorSection}-title" data-index="${index}" value="${escapeHtml(entry.title)}" placeholder="Title" />
+                      <input class="text-input full" data-about-field="${aboutEditorSection}-meta" data-index="${index}" value="${escapeHtml(entry.meta)}" placeholder="${metaLabel}" />
+                    </div>
+                    <div class="modal-actions">
+                      <button class="action-btn ghost editor-danger" type="button" data-remove-about-item="${aboutEditorSection}:${index}">Delete</button>
+                    </div>
+                  </div>
+                `
+              )
+              .join("")}
+            <div class="modal-actions">
+              <button class="action-btn" type="button" data-add-about-item="${aboutEditorSection}">Add Item</button>
+            </div>
+          </section>
+        `;
+      }
+
+      function renderProjectsEditor() {
+        const selectedIds = new Set(projects.map((project) => project.id));
+        const availableLibrary = projectLibrary.filter((project) => !selectedIds.has(project.id));
+
+        projectsEditorRoot.innerHTML = projects
+          .map(
+            (project, index) => `
+              <section class="editor-year">
+                <div class="editor-entry" draggable="true" data-project-index="${index}">
+                  <div class="editor-year-head">
+                    <div>
+                      <h3 class="editor-year-title">Project ${index + 1}</h3>
+                      <div class="editor-year-badge">${escapeHtml(project.title || "Untitled")}</div>
+                    </div>
+                    <button class="action-btn ghost editor-danger" type="button" data-remove-project="${index}">Delete</button>
+                  </div>
+                  <div class="editor-grid">
+                    <input class="text-input full" data-project-field="title" data-index="${index}" value="${escapeHtml(project.title)}" placeholder="Project name" />
+                    <input class="text-input full" data-project-field="venue" data-index="${index}" value="${escapeHtml(project.venue)}" placeholder="Venue" />
+                    <input class="text-input full" data-project-field="summary" data-index="${index}" value="${escapeHtml(project.summary)}" placeholder="Short summary" />
+                    <textarea class="text-area full" data-project-field="description" data-index="${index}" placeholder="Detailed description">${escapeHtml(project.description)}</textarea>
+                  </div>
+                  <div class="modal-actions">
+                    <label class="action-btn" for="hero-upload-${index}">Upload Cover</label>
+                    <input id="hero-upload-${index}" type="file" accept="image/*" data-project-upload="hero" data-index="${index}" hidden />
+                  </div>
+                  ${
+                    project.heroImage
+                      ? `<div class="project-editor-images">
+                          <div class="project-thumb">
+                            <img src="${escapeHtml(project.heroImage)}" alt="Cover image" />
+                            <button class="action-btn ghost editor-danger" type="button" data-remove-project-image="${index}:hero">Delete Cover</button>
+                          </div>
+                        </div>`
+                      : ""
+                  }
+                  <div class="modal-actions">
+                    <label class="action-btn" for="gallery-upload-${index}">Upload Detail Images</label>
+                    <input id="gallery-upload-${index}" type="file" accept="image/*" data-project-upload="gallery" data-index="${index}" multiple hidden />
+                  </div>
+                  ${
+                    project.galleryImages.length
+                      ? `<div class="project-editor-images">
+                          ${project.galleryImages
+                            .map(
+                              (image, imageIndex) => `
+                                <div class="project-thumb">
+                                  <img src="${escapeHtml(image)}" alt="Detail image ${imageIndex + 1}" />
+                                  <button class="action-btn ghost editor-danger" type="button" data-remove-project-image="${index}:${imageIndex}">Delete</button>
+                                </div>
+                              `
+                            )
+                            .join("")}
+                        </div>`
+                      : ""
+                  }
+                </div>
+              </section>
+            `
+          )
+          .join("");
+
+        projectsEditorRoot.innerHTML += `
+          <section class="editor-year">
+            <div class="editor-year-head">
+              <div>
+                <h3 class="editor-year-title">Add From Library</h3>
+                <div class="editor-year-badge">${availableLibrary.length} available</div>
+              </div>
+            </div>
+            ${
+              availableLibrary.length
+                ? availableLibrary
+                    .map(
+                      (project) => `
+                        <div class="editor-entry">
+                          <div>
+                            <strong>${escapeHtml(project.title)}</strong>
+                            <p class="publication-authors">${escapeHtml(project.venue)}</p>
+                            <p class="publication-meta">${escapeHtml(project.summary)}</p>
+                          </div>
+                          <div class="modal-actions">
+                            <button class="action-btn" type="button" data-add-library-project="${escapeHtml(project.id)}">Add to Site</button>
+                          </div>
+                        </div>
+                      `
+                    )
+                    .join("")
+                : '<p class="publication-authors">All library projects are already in this site.</p>'
+            }
+          </section>
+        `;
+      }
+
+      async function savePublications() {
+        try {
+          const payload = await requestJson(`${API_BASE}/publications`, {
+            method: "PUT",
+            body: JSON.stringify({ publications }),
+          });
+          publications = payload.publications;
+          publicationLibrary = payload.library || [];
+          renderPublications();
+          renderEditor();
+          editorStatus.textContent = "Saved.";
+        } catch (error) {
+          editorStatus.textContent = error.message;
+        }
+      }
+
+      async function saveAbout() {
+        try {
+          const payload = await requestJson(`${API_BASE}/about`, {
+            method: "PUT",
+            body: JSON.stringify({ about: aboutContent }),
+          });
+          aboutContent = payload.about;
+          renderAbout();
+          renderAboutEditor();
+          aboutEditorStatus.textContent = "Saved.";
+        } catch (error) {
+          aboutEditorStatus.textContent = error.message;
+        }
+      }
+
+      async function saveProjects() {
+        try {
+          const payload = await requestJson(`${API_BASE}/projects`, {
+            method: "PUT",
+            body: JSON.stringify({ projects }),
+          });
+          projects = payload.projects;
+          projectLibrary = payload.library || [];
+          renderProjects();
+          renderProjectsEditor();
+          projectsEditorStatus.textContent = "Saved.";
+        } catch (error) {
+          projectsEditorStatus.textContent = error.message;
+        }
+      }
+
+      function openModal(modal) {
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal(modal) {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      async function loadPublications() {
+        const payload = await requestJson(`${API_BASE}/publications`);
+        publications = payload.publications;
+        publicationLibrary = payload.library || [];
+        renderPublications();
+      }
+
+      async function loadAbout() {
+        const payload = await requestJson(`${API_BASE}/about`);
+        aboutContent = payload.about;
+        renderAbout();
+      }
+
+      async function loadProjects() {
+        const payload = await requestJson(`${API_BASE}/projects`);
+        projects = payload.projects;
+        projectLibrary = payload.library || [];
+        renderProjects();
+      }
+
+      async function ensureSession() {
+        const payload = await requestJson(`${API_BASE}/session`);
+        return payload.authenticated;
+      }
+
+      function openEditorForActiveTab() {
+        if (activeTab === "about" && aboutEditorSection) {
+          renderAboutEditor();
+          aboutEditorStatus.textContent = "";
+          openModal(aboutEditorModal);
+          return;
+        }
+
+        if (activeTab === "projects") {
+          renderProjectsEditor();
+          projectsEditorStatus.textContent = "";
+          openModal(projectsEditorModal);
+          return;
+        }
+
+        renderEditor();
+        editorStatus.textContent = "";
+        openModal(editorModal);
+      }
+
+      editTrigger.addEventListener("click", async () => {
+        passwordStatus.textContent = "";
+        try {
+          const authenticated = await ensureSession();
+          if (authenticated) {
+            openEditorForActiveTab();
+            return;
+          }
+        } catch (_error) {
+          passwordStatus.textContent = "Could not reach the server.";
+        }
+
+        passwordInput.value = "";
+        openModal(passwordModal);
+        passwordInput.focus();
+      });
+
+      aboutRender.addEventListener("click", async (event) => {
+        const button = event.target.closest("[data-about-open]");
+        if (!button) {
+          return;
+        }
+
+        aboutEditorSection = button.dataset.aboutOpen;
+        passwordStatus.textContent = "";
+
+        try {
+          const authenticated = await ensureSession();
+          if (authenticated) {
+            openEditorForActiveTab();
+            return;
+          }
+        } catch (_error) {
+          passwordStatus.textContent = "Could not reach the server.";
+        }
+
+        passwordInput.value = "";
+        openModal(passwordModal);
+        passwordInput.focus();
+      });
+
+      projectsRender.addEventListener("click", (event) => {
+        const link = event.target.closest(".project-link");
+        if (link) {
+          event.preventDefault();
+          enterProjectDetail(link.dataset.projectId, { updateHash: true });
+        }
+      });
+
+      projectDetailRender.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-detail-image]");
+        if (!button || !projectDetailState) {
+          return;
+        }
+
+        projectDetailState.selectedImage = button.dataset.detailImage;
+        renderProjectDetail();
+      });
+
+      window.addEventListener("hashchange", () => {
+        if (suppressHashRoute) {
+          return;
+        }
+
+        routeFromHash();
+      });
+
+      window.addEventListener("popstate", () => {
+        if (suppressHashRoute) {
+          return;
+        }
+
+        routeFromHash();
+      });
+
+      passwordCancel.addEventListener("click", () => closeModal(passwordModal));
+
+      passwordSubmit.addEventListener("click", async () => {
+        passwordStatus.textContent = "";
+
+        try {
+          await requestJson(`${API_BASE}/login`, {
+            method: "POST",
+            body: JSON.stringify({ password: passwordInput.value }),
+          });
+        } catch (error) {
+          passwordStatus.textContent = error.message;
+          return;
+        }
+
+        closeModal(passwordModal);
+        openEditorForActiveTab();
+      });
+
+      closeEditorButton.addEventListener("click", () => closeModal(editorModal));
+      closeAboutEditorButton.addEventListener("click", () => closeModal(aboutEditorModal));
+      closeProjectsEditorButton.addEventListener("click", () => closeModal(projectsEditorModal));
+
+      addYearButton.addEventListener("click", () => {
+        publications.unshift({
+          year: "2026",
+          items: [{ title: "", authors: "", venue: "", award: "" }],
+        });
+        renderEditor();
+      });
+
+      savePublicationsButton.addEventListener("click", () => void savePublications());
+      saveAboutButton.addEventListener("click", () => void saveAbout());
+      saveProjectsButton.addEventListener("click", () => void saveProjects());
+      addProjectButton.addEventListener("click", () => {
+        projects.unshift({
+          id: `project-${Date.now()}`,
+          title: "",
+          venue: "",
+          summary: "",
+          description: "",
+          heroImage: "",
+          galleryImages: [],
+        });
+        renderProjectsEditor();
+      });
+
+      editorRoot.addEventListener("input", (event) => {
+        const target = event.target;
+
+        if (target.dataset.yearField !== undefined) {
+          const groupIndex = Number(target.dataset.yearField);
+          publications[groupIndex].year = target.value;
+          return;
+        }
+
+        const entry = target.closest(".editor-entry");
+        if (!entry || !target.dataset.field) {
+          return;
+        }
+
+        const groupIndex = Number(entry.dataset.groupIndex);
+        const itemIndex = Number(entry.dataset.itemIndex);
+        publications[groupIndex].items[itemIndex][target.dataset.field] = target.value;
+      });
+
+      editorRoot.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) {
+          return;
+        }
+
+        if (button.dataset.addItem !== undefined) {
+          const groupIndex = Number(button.dataset.addItem);
+          publications[groupIndex].items.push({ title: "", authors: "", venue: "", award: "" });
+          renderEditor();
+          return;
+        }
+
+        if (button.dataset.removeItem) {
+          const [groupIndex, itemIndex] = button.dataset.removeItem.split(":").map(Number);
+          publications[groupIndex].items.splice(itemIndex, 1);
+          if (publications[groupIndex].items.length === 0) {
+            publications[groupIndex].items.push({ title: "", authors: "", venue: "", award: "" });
+          }
+          renderEditor();
+          return;
+        }
+
+        if (button.dataset.removeYear !== undefined) {
+          const groupIndex = Number(button.dataset.removeYear);
+          publications.splice(groupIndex, 1);
+          renderEditor();
+          return;
+        }
+
+        if (button.dataset.addLibraryPublication) {
+          const libraryItem = publicationLibrary.find((item) => item.id === button.dataset.addLibraryPublication);
+          if (!libraryItem) {
+            return;
+          }
+
+          const targetGroup = publications.find((group) => group.year === libraryItem.year);
+          const nextItem = {
+            id: libraryItem.id,
+            title: libraryItem.title,
+            authors: libraryItem.authors,
+            venue: libraryItem.venue,
+            award: libraryItem.award || "",
+          };
+
+          if (targetGroup) {
+            targetGroup.items.push(nextItem);
+          } else {
+            publications.push({ year: libraryItem.year, items: [nextItem] });
+          }
+
+          renderEditor();
+        }
+      });
+
+      editorRoot.addEventListener("dragstart", (event) => {
+        const entry = event.target.closest(".editor-entry");
+        if (!entry) {
+          return;
+        }
+
+        draggedItem = {
+          groupIndex: Number(entry.dataset.groupIndex),
+          itemIndex: Number(entry.dataset.itemIndex),
+        };
+        entry.classList.add("dragging");
+      });
+
+      editorRoot.addEventListener("dragend", () => {
+        draggedItem = null;
+        editorRoot.querySelectorAll(".editor-entry").forEach((entry) => {
+          entry.classList.remove("dragging", "drop-target");
+        });
+      });
+
+      editorRoot.addEventListener("dragover", (event) => {
+        const entry = event.target.closest(".editor-entry");
+        if (!entry || !draggedItem) {
+          return;
+        }
+
+        const groupIndex = Number(entry.dataset.groupIndex);
+        if (groupIndex !== draggedItem.groupIndex) {
+          return;
+        }
+
+        event.preventDefault();
+        editorRoot.querySelectorAll(".editor-entry").forEach((item) => item.classList.remove("drop-target"));
+        entry.classList.add("drop-target");
+      });
+
+      editorRoot.addEventListener("drop", (event) => {
+        const entry = event.target.closest(".editor-entry");
+        if (!entry || !draggedItem) {
+          return;
+        }
+
+        const groupIndex = Number(entry.dataset.groupIndex);
+        const itemIndex = Number(entry.dataset.itemIndex);
+        if (groupIndex !== draggedItem.groupIndex) {
+          return;
+        }
+
+        event.preventDefault();
+        const items = publications[groupIndex].items;
+        const [moved] = items.splice(draggedItem.itemIndex, 1);
+        items.splice(itemIndex, 0, moved);
+        renderEditor();
+      });
+
+      aboutEditorRoot.addEventListener("input", (event) => {
+        const target = event.target;
+        const field = target.dataset.aboutField;
+        const index = Number(target.dataset.index);
+
+        if (field === "news-title") {
+          aboutContent.news[index].title = target.value;
+          return;
+        }
+
+        if (field === "news-meta") {
+          aboutContent.news[index].meta = target.value;
+          return;
+        }
+
+        if (field === "travel-title") {
+          aboutContent.travel[index].title = target.value;
+          return;
+        }
+
+        if (field === "travel-meta") {
+          aboutContent.travel[index].meta = target.value;
+        }
+      });
+
+      aboutEditorRoot.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) {
+          return;
+        }
+
+        if (button.dataset.addAboutItem !== undefined) {
+          const key = button.dataset.addAboutItem;
+          aboutContent[key].push({ title: "", meta: "" });
+          renderAboutEditor();
+          return;
+        }
+
+        if (button.dataset.removeAboutItem !== undefined) {
+          const [key, index] = button.dataset.removeAboutItem.split(":");
+          aboutContent[key].splice(Number(index), 1);
+          renderAboutEditor();
+        }
+      });
+
+      aboutEditorRoot.addEventListener("dragstart", (event) => {
+        const entry = event.target.closest(".editor-entry");
+        if (!entry) {
+          return;
+        }
+
+        aboutDraggedItem = {
+          list: entry.dataset.aboutList,
+          index: Number(entry.dataset.aboutIndex),
+        };
+        entry.classList.add("dragging");
+      });
+
+      aboutEditorRoot.addEventListener("dragend", () => {
+        aboutDraggedItem = null;
+        aboutEditorRoot.querySelectorAll(".editor-entry").forEach((entry) => {
+          entry.classList.remove("dragging", "drop-target");
+        });
+      });
+
+      aboutEditorRoot.addEventListener("dragover", (event) => {
+        const entry = event.target.closest(".editor-entry");
+        if (!entry || !aboutDraggedItem || entry.dataset.aboutList !== aboutDraggedItem.list) {
+          return;
+        }
+
+        event.preventDefault();
+        aboutEditorRoot.querySelectorAll(".editor-entry").forEach((item) => item.classList.remove("drop-target"));
+        entry.classList.add("drop-target");
+      });
+
+      aboutEditorRoot.addEventListener("drop", (event) => {
+        const entry = event.target.closest(".editor-entry");
+        if (!entry || !aboutDraggedItem || entry.dataset.aboutList !== aboutDraggedItem.list) {
+          return;
+        }
+
+        event.preventDefault();
+        const list = aboutContent[aboutDraggedItem.list];
+        const toIndex = Number(entry.dataset.aboutIndex);
+        const [moved] = list.splice(aboutDraggedItem.index, 1);
+        list.splice(toIndex, 0, moved);
+        renderAboutEditor();
+      });
+
+      projectsEditorRoot.addEventListener("input", (event) => {
+        const target = event.target;
+        const field = target.dataset.projectField;
+        const index = Number(target.dataset.index);
+        if (!field || Number.isNaN(index)) {
+          return;
+        }
+
+        projects[index][field] = target.value;
+      });
+
+      projectsEditorRoot.addEventListener("click", async (event) => {
+        const button = event.target.closest("button");
+        if (!button) {
+          return;
+        }
+
+        if (button.dataset.removeProject !== undefined) {
+          const projectIndex = Number(button.dataset.removeProject);
+          const project = projects[projectIndex];
+          const imageUrls = [project.heroImage, ...project.galleryImages].filter((url) => /^https?:\/\//.test(url));
+
+          try {
+            await Promise.all(imageUrls.map((url) => deleteProjectAsset(url)));
+          } catch (error) {
+            projectsEditorStatus.textContent = error.message;
+            return;
+          }
+
+          projects.splice(projectIndex, 1);
+          renderProjectsEditor();
+          return;
+        }
+
+        if (button.dataset.removeProjectImage !== undefined) {
+          const [projectIndexRaw, imageIndexRaw] = button.dataset.removeProjectImage.split(":");
+          const project = projects[Number(projectIndexRaw)];
+          const imageUrl =
+            imageIndexRaw === "hero" ? project.heroImage : project.galleryImages[Number(imageIndexRaw)];
+
+          try {
+            if (imageUrl && /^https?:\/\//.test(imageUrl)) {
+              await deleteProjectAsset(imageUrl);
+            }
+          } catch (error) {
+            projectsEditorStatus.textContent = error.message;
+            return;
+          }
+
+          if (imageIndexRaw === "hero") {
+            project.heroImage = "";
+          } else {
+            project.galleryImages.splice(Number(imageIndexRaw), 1);
+          }
+          renderProjectsEditor();
+          return;
+        }
+
+        if (button.dataset.addLibraryProject) {
+          const libraryProject = projectLibrary.find((project) => project.id === button.dataset.addLibraryProject);
+          if (!libraryProject) {
+            return;
+          }
+
+          projects.push({
+            id: libraryProject.id,
+            title: libraryProject.title,
+            venue: libraryProject.venue,
+            summary: libraryProject.summary,
+            description: libraryProject.description,
+            heroImage: libraryProject.heroImage,
+            galleryImages: [...libraryProject.galleryImages],
+          });
+          renderProjectsEditor();
+        }
+      });
+
+      projectsEditorRoot.addEventListener("change", async (event) => {
+        const input = event.target;
+        const uploadType = input.dataset.projectUpload;
+        const index = Number(input.dataset.index);
+        if (!uploadType || Number.isNaN(index) || !input.files?.length) {
+          return;
+        }
+
+        projectsEditorStatus.textContent = "Uploading...";
+        const files = Array.from(input.files);
+        let uploadedUrls;
+
+        try {
+          uploadedUrls = await Promise.all(files.map((file) => uploadProjectAsset(file)));
+        } catch (error) {
+          projectsEditorStatus.textContent = error.message;
+          input.value = "";
+          return;
+        }
+
+        if (uploadType === "hero") {
+          projects[index].heroImage = uploadedUrls[0] || "";
+        } else {
+          projects[index].galleryImages.push(...uploadedUrls);
+        }
+
+        input.value = "";
+        projectsEditorStatus.textContent = "";
+        renderProjectsEditor();
+      });
+
+      projectsEditorRoot.addEventListener("dragstart", (event) => {
+        const entry = event.target.closest("[data-project-index]");
+        if (!entry) {
+          return;
+        }
+
+        projectDraggedIndex = Number(entry.dataset.projectIndex);
+        entry.classList.add("dragging");
+      });
+
+      projectsEditorRoot.addEventListener("dragend", () => {
+        projectDraggedIndex = null;
+        projectsEditorRoot.querySelectorAll("[data-project-index]").forEach((entry) => {
+          entry.classList.remove("dragging", "drop-target");
+        });
+      });
+
+      projectsEditorRoot.addEventListener("dragover", (event) => {
+        const entry = event.target.closest("[data-project-index]");
+        if (!entry || projectDraggedIndex === null) {
+          return;
+        }
+
+        event.preventDefault();
+        projectsEditorRoot.querySelectorAll("[data-project-index]").forEach((item) => {
+          item.classList.remove("drop-target");
+        });
+        entry.classList.add("drop-target");
+      });
+
+      projectsEditorRoot.addEventListener("drop", (event) => {
+        const entry = event.target.closest("[data-project-index]");
+        if (!entry || projectDraggedIndex === null) {
+          return;
+        }
+
+        event.preventDefault();
+        const toIndex = Number(entry.dataset.projectIndex);
+        const [moved] = projects.splice(projectDraggedIndex, 1);
+        projects.splice(toIndex, 0, moved);
+        renderProjectsEditor();
+      });
+
+      Promise.all([loadPublications(), loadAbout(), loadProjects()])
+        .then(() => {
+          routeFromHash();
+        })
+        .catch((error) => {
+          const message = `<p class="publication-authors">${escapeHtml(error.message)}</p>`;
+          publicationsRender.innerHTML = message;
+          aboutRender.innerHTML = message;
+          projectsRender.innerHTML = message;
+        });
+    </script>
+  </body>
+</html>
