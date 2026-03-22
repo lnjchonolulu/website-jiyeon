@@ -22,6 +22,7 @@ const SITE_SLUG = slugify(process.env.SITE_SLUG || "hyungjuncho") || "hyungjunch
 const PRIMARY_SITE_SLUG = "hyungjuncho";
 const COOKIE_NAME = `${SITE_SLUG}_admin_session`;
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 12;
+const ABOUT_CONTENT_VERSION = "jiyeon-about-v1";
 
 const defaultPublications = [];
 const PRUNED_PUBLICATION_TITLES = new Set([
@@ -77,55 +78,6 @@ const defaultAbout = {
     { title: "Attending CHI 2024 conference, Honolulu, US", meta: "May 11-16, 2024" },
     { title: "Attending Scalable HCI Symposium, Shenzhen, China", meta: "Jan 7-11, 2024" },
     { title: "Attending DIS 2023 conference, Pittsburgh, US", meta: "July 9-14, 2023" },
-  ],
-};
-
-const legacyHyungjunAbout = {
-  education: [
-    {
-      degree: "Ph.D in Industrial Design, Korea Advanced Institute of Science and Technology (KAIST), Feb 2025",
-      details: [
-        "Dissertation: Design Speculations for Reimagining Human-Thing Relationships",
-        "Committee: Tek-Jin Nam (Chair), Hwajung Hong, Changhee Lee, Heekyung Jung, Daisy Yoo",
-      ],
-    },
-    {
-      degree: "M.S in Industrial Design, Korea Advanced Institute of Science and Technology (KAIST), 2020",
-      details: [],
-    },
-    {
-      degree: "B.S in Industrial Design, Korea Advanced Institute of Science and Technology (KAIST), 2018",
-      details: [],
-    },
-  ],
-  researchInterests: ["Human-AI Interaction"],
-  news: [
-    { title: "Two papers accepted to DIS 2026", meta: "March 18, 2026" },
-    { title: "Received Best Paper Honorable Mention Award 🏅at CHI 2026", meta: "March 8, 2026" },
-    { title: "Two papers accepted to CHI 2026", meta: "Jan 15, 2026" },
-    {
-      title: "Organizing Restoring Human Authenticity in AI-MC Workshop at CHI 2026",
-      meta: "Nov 21, 2025",
-    },
-    { title: "Joined the University of Florida as an Assistant Professor", meta: "Aug 16, 2025" },
-    { title: "One paper accepted to RO-MAN 2025", meta: "June 9, 2025" },
-    {
-      title: "Joined as a visiting scholar at Kyoto University, Japan, working with Dr. Naomi Yamashita",
-      meta: "May 26, 2025",
-    },
-    { title: "Organizing Design Knowledge in AI Workshops at DIS 2025", meta: "May 1, 2025" },
-    { title: "Received Best Paper Honorable Mention Award 🏅at CHI 2025", meta: "April 26, 2025" },
-  ],
-  travel: [
-    { title: "Attending DIS 2026 conference, Singapore", meta: "June 13-17, 2026" },
-    { title: "Attending CHI 2026 conference, Barcelona, Spain", meta: "April 13-17, 2026" },
-    { title: "Attending DIS 2025 conference, Funchal, Madeira", meta: "July 5-9, 2025" },
-    { title: "Attending CHI 2025 conference, Yokohama, Japan", meta: "April 26 - May 1, 2024" },
-    { title: "Attending DIS 2024 conference, Copenhagen, Denmark", meta: "July 1-5, 2024" },
-    { title: "Attending CHI 2024 conference, Honolulu, US", meta: "May 11-16, 2024" },
-    { title: "Attending Scalable HCI Symposium, Shenzhen, China", meta: "Jan 7-11, 2024" },
-    { title: "Attending DIS 2023 conference, Pittsburgh, US", meta: "July 9-14, 2023" },
-    { title: "Attending CHI 2023 conference, Hamburg, US", meta: "April 23-28, 2023" },
   ],
 };
 
@@ -871,9 +823,10 @@ async function ensureSchema() {
   }
 
   if (SITE_SLUG === "jiyeon") {
-    const currentAbout = await loadAbout();
-    if (JSON.stringify(currentAbout) === JSON.stringify(legacyHyungjunAbout)) {
+    const currentAboutVersion = await loadSiteContent("about-version", null);
+    if (currentAboutVersion !== ABOUT_CONTENT_VERSION) {
       await saveAbout(defaultAbout);
+      await saveSiteContent("about-version", ABOUT_CONTENT_VERSION);
     }
   }
 
