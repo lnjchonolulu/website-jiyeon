@@ -779,6 +779,13 @@
         gap: 6px;
       }
 
+      .project-detail-output-links {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 16px;
+        row-gap: 6px;
+      }
+
       .project-detail-output + .project-detail-output {
         margin-top: 10px;
       }
@@ -1349,16 +1356,15 @@
             </a>
           </div>
           <p class="body-copy hero-copy">
-            I study how AI and other emerging technologies shape human social experience,
-            particularly as they come to be perceived and engaged as social actors. I examine and
-            speculate on these evolving human-technology relations through the design of new
-            artifacts and systems, alongside human-centered research methods.
+            I study how AI and other technologies shape communication experiences. Grounded in the
+            belief that strong human relationships enhance quality of life, I engage in critical
+            reflection, design, and speculation on technologies that can strengthen everyday social
+            relationships and support individual well-being.
           </p>
           <p class="body-copy hero-copy">
-            I take an interdisciplinary approach to human-centered AI, drawing on perspectives from
-            design, engineering, psychology, STS, and the social sciences. Currently, I am an
-            Assistant Professor of AI and Design at the University of Florida. I hold a Ph.D., M.S.,
-            and B.S. in Industrial Design from KAIST.
+            Drawing on communication and social scientific perspectives, I employ a range of
+            qualitative and design methodologies. I am currently a second-year Ph.D. student in
+            Information at the University of Michigan.
           </p>
         </div>
       </section>
@@ -1919,7 +1925,7 @@
                           (output) => `
                             <div class="project-detail-output">
                               <strong class="project-detail-output-label">${escapeHtml(output.label)}</strong>
-                              <div class="about-links">
+                              <div class="project-detail-output-links">
                                 ${
                                   output.doiUrl
                                     ? `
