@@ -346,6 +346,9 @@ function validateProjects(payload) {
       typeof project.venue === "string" &&
       typeof project.summary === "string" &&
       typeof project.description === "string" &&
+      typeof (project.doiUrl || "") === "string" &&
+      typeof (project.pdfUrl || "") === "string" &&
+      typeof (project.videoUrl || "") === "string" &&
       typeof project.heroImage === "string" &&
       Array.isArray(project.galleryImages) &&
       project.galleryImages.every((image) => typeof image === "string")
@@ -622,6 +625,9 @@ function normalizeProject(project) {
     venue: project.venue,
     summary: project.summary,
     description: project.description,
+    doiUrl: project.doiUrl || "",
+    pdfUrl: project.pdfUrl || "",
+    videoUrl: project.videoUrl || "",
     heroImage: project.heroImage || "",
     galleryImages: Array.isArray(project.galleryImages) ? project.galleryImages : [],
   };
@@ -630,7 +636,7 @@ function normalizeProject(project) {
 async function loadProjectLibrary() {
   const { rows } = await pool.query(
     `
-      SELECT id, title, venue, summary, description, hero_image, gallery_images
+      SELECT id, title, venue, summary, description, doi_url, pdf_url, video_url, hero_image, gallery_images
       FROM projects_master
       ORDER BY updated_at DESC, created_at DESC
     `
@@ -642,6 +648,9 @@ async function loadProjectLibrary() {
     venue: row.venue,
     summary: row.summary,
     description: row.description,
+    doiUrl: row.doi_url || "",
+    pdfUrl: row.pdf_url || "",
+    videoUrl: row.video_url || "",
     heroImage: row.hero_image || "",
     galleryImages: Array.isArray(row.gallery_images) ? row.gallery_images : [],
   }));
@@ -660,17 +669,23 @@ async function saveProjectLibraryItems(projects) {
             venue,
             summary,
             description,
+            doi_url,
+            pdf_url,
+            video_url,
             hero_image,
             gallery_images,
             updated_at
           )
-          VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, NOW())
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb, NOW())
           ON CONFLICT (id)
           DO UPDATE SET
             title = EXCLUDED.title,
             venue = EXCLUDED.venue,
             summary = EXCLUDED.summary,
             description = EXCLUDED.description,
+            doi_url = EXCLUDED.doi_url,
+            pdf_url = EXCLUDED.pdf_url,
+            video_url = EXCLUDED.video_url,
             hero_image = EXCLUDED.hero_image,
             gallery_images = EXCLUDED.gallery_images,
             updated_at = NOW()
@@ -681,6 +696,9 @@ async function saveProjectLibraryItems(projects) {
           project.venue,
           project.summary,
           project.description,
+          project.doiUrl,
+          project.pdfUrl,
+          project.videoUrl,
           project.heroImage,
           JSON.stringify(project.galleryImages),
         ]
@@ -772,6 +790,9 @@ async function ensureSchema() {
   await pool.query("ALTER TABLE publications ADD COLUMN IF NOT EXISTS site_slug TEXT");
   await pool.query("UPDATE publications SET site_slug = $1 WHERE site_slug IS NULL OR site_slug = ''", [PRIMARY_SITE_SLUG]);
   await pool.query("CREATE INDEX IF NOT EXISTS publications_site_year_sort_idx ON publications (site_slug, year_sort_order, item_sort_order)");
+  await pool.query("ALTER TABLE projects_master ADD COLUMN IF NOT EXISTS doi_url TEXT NOT NULL DEFAULT ''");
+  await pool.query("ALTER TABLE projects_master ADD COLUMN IF NOT EXISTS pdf_url TEXT NOT NULL DEFAULT ''");
+  await pool.query("ALTER TABLE projects_master ADD COLUMN IF NOT EXISTS video_url TEXT NOT NULL DEFAULT ''");
   await purgePrunedPublications();
 
   const publicationSelectionRows = await pool.query("SELECT COUNT(*)::int AS count FROM site_content WHERE key = $1", [
@@ -814,14 +835,6 @@ async function ensureSchema() {
       await loadAbout();
     } else {
       await saveAbout(defaultAbout);
-    }
-  }
-
-  if (SITE_SLUG === "jiyeon") {
-    const currentAboutVersion = await loadSiteContent("about-version", null);
-    if (currentAboutVersion !== ABOUT_CONTENT_VERSION) {
-      await saveAbout(defaultAbout);
-      await saveSiteContent("about-version", ABOUT_CONTENT_VERSION);
     }
   }
 
