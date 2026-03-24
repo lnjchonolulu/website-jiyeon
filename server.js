@@ -352,9 +352,9 @@ function validateProjects(payload) {
           output &&
           typeof output.label === "string" &&
           typeof output.doiUrl === "string" &&
-          typeof output.pdfUrl === "string" &&
-          typeof output.videoUrl === "string"
+          typeof output.pdfUrl === "string"
       ) &&
+      typeof (project.videoUrl || "") === "string" &&
       typeof project.heroImage === "string" &&
       Array.isArray(project.galleryImages) &&
       project.galleryImages.every((image) => typeof image === "string")
@@ -630,7 +630,6 @@ function normalizeProjectOutputs(project) {
       label: output.label || `Paper ${index + 1}`,
       doiUrl: output.doiUrl || "",
       pdfUrl: output.pdfUrl || "",
-      videoUrl: output.videoUrl || "",
     }));
   }
 
@@ -640,16 +639,6 @@ function normalizeProjectOutputs(project) {
       label: "Paper 1",
       doiUrl: project.doiUrl || "",
       pdfUrl: project.pdfUrl || "",
-      videoUrl: "",
-    });
-  }
-
-  if (project.videoUrl) {
-    legacyOutputs.push({
-      label: "Demo Video",
-      doiUrl: "",
-      pdfUrl: "",
-      videoUrl: project.videoUrl || "",
     });
   }
 
@@ -664,6 +653,11 @@ function normalizeProject(project) {
     summary: project.summary,
     description: project.description,
     outputs: normalizeProjectOutputs(project),
+    videoUrl:
+      project.videoUrl ||
+      (Array.isArray(project.outputs)
+        ? project.outputs.find((output) => output.videoUrl)?.videoUrl || ""
+        : ""),
     heroImage: project.heroImage || "",
     galleryImages: Array.isArray(project.galleryImages) ? project.galleryImages : [],
   };
@@ -688,8 +682,8 @@ async function loadProjectLibrary() {
       outputs: Array.isArray(row.outputs) ? row.outputs : [],
       doiUrl: row.doi_url || "",
       pdfUrl: row.pdf_url || "",
-      videoUrl: row.video_url || "",
     }),
+    videoUrl: row.video_url || "",
     heroImage: row.hero_image || "",
     galleryImages: Array.isArray(row.gallery_images) ? row.gallery_images : [],
   }));
@@ -740,7 +734,7 @@ async function saveProjectLibraryItems(projects) {
           JSON.stringify(project.outputs),
           project.outputs[0]?.doiUrl || "",
           project.outputs[0]?.pdfUrl || "",
-          project.outputs.find((output) => output.videoUrl)?.videoUrl || "",
+          project.videoUrl || "",
           project.heroImage,
           JSON.stringify(project.galleryImages),
         ]
